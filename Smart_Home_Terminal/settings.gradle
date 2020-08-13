@@ -1,0 +1,2 @@
+rootProject.name='Smart_Home_Terminal'
+include ':app'

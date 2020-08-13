@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        >
+        <TextView
+            android:gravity="center"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Power"
+            android:textSize="12dp"
+            android:textColor="#fff"
+            android:background="#3F51B5"
+            android:id="@+id/list_task_name"
+            />
+        <TextView
+            android:gravity="center"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="2020-09-13 22:45:00"
+            android:textSize="12dp"
+            android:textColor="#fff"
+            android:background="#4CAF50"
+            android:id="@+id/list_task_startTime"
+            />
+        <TextView
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="2020-09-14 06:50:00"
+            android:textSize="12dp"
+            android:textColor="#fff"
+            android:id="@+id/list_task_endTime"
+            android:background="#E91E63"
+            />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

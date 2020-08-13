@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TimerTaskActivity"
+    android:orientation="vertical">
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F5F6FA"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="任务名    "
+            android:gravity="center"
+            android:textSize="20dp"
+            />
+        <EditText
+            android:gravity="left|center"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:hint="请输入任务名"
+            android:background="@null"
+            android:id="@+id/input_task_name"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        >
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="任务    "
+            android:gravity="center"
+            android:textSize="20dp"
+            />
+        <RadioGroup
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="灯具"
+                android:id="@+id/radio_light"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="风扇"
+                android:id="@+id/radio_fan"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电源"
+                android:id="@+id/radio_power"
+                />
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#F5F6FA"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/tack_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="#6200EE"
+            android:onClick="Task_Click"
+            android:text="选择开始时间"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/show_start_time"
+            android:gravity="center"
+            android:layout_weight="6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="------------"
+            android:textSize="30dp"
+            />
+    </LinearLayout>
+
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="20dp"-->
+<!--        android:background="#F5F6FA"/>-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#F5F6FA"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        >
+        <Button
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tack_end_time"
+            android:text="选择结束时间"
+            android:background="#6200EE"
+            android:textColor="#fff"
+            android:onClick="Task_Click"
+            />
+        <TextView
+            android:id="@+id/show_end_time"
+            android:gravity="center"
+            android:layout_weight="6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="------------"
+            android:textSize="30dp"
+            />
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#F5F6FA"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        >
+        <Button
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:id="@+id/task_commit"
+            android:text="确认"
+            android:background="#6200EE"
+            android:textColor="#fff"
+            android:onClick="Task_Click"
+            />
+    </LinearLayout>
+</LinearLayout>
