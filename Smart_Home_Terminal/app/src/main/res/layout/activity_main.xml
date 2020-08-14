@@ -117,12 +117,14 @@
             android:onClick="Main_Click"
             >
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:src="@drawable/w_null"
                 android:id="@+id/show_weather"
+                android:gravity="center"
                 />
             <TextView
+                android:gravity="center"
                 android:textSize="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

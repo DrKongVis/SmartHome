@@ -62,10 +62,12 @@ public class MQTTReceiveCallback implements MqttCallback {
         if(topic.equals("back")){
             Message msg = new Message();
             msg.what = 10;
+            msg.obj = data;
             BackHandler.sendMessage(msg);
         }else if(topic.equals("iot")){
             Message msg = new Message();
             msg.what = 10;
+            msg.obj = data;
             DataHandler.sendMessage(msg);
         }
     }

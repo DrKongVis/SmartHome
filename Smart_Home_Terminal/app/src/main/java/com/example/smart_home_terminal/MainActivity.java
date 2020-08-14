@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.example.smart_home_terminal.AAChartCoreLib.AAChartConfiger.AAChartModel;
 import com.example.smart_home_terminal.AAChartCoreLib.AAChartConfiger.AAChartView;
 import com.example.smart_home_terminal.AAChartCoreLib.AAChartConfiger.AAOptionsConstructor;
@@ -31,6 +32,7 @@ import com.example.smart_home_terminal.AAChartCoreLib.AAOptionsModel.AATooltip;
 import com.example.smart_home_terminal.MQTT.MyMqttClient;
 import com.example.smart_home_terminal.TaskList.TaskAdapter;
 import com.example.smart_home_terminal.TaskList.TaskClass;
+import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -48,6 +50,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import interfaces.heweather.com.interfacesmodule.bean.base.Code;
+import interfaces.heweather.com.interfacesmodule.bean.base.Lang;
+import interfaces.heweather.com.interfacesmodule.bean.base.Unit;
+import interfaces.heweather.com.interfacesmodule.bean.geo.GeoBean;
+import interfaces.heweather.com.interfacesmodule.bean.weather.WeatherNowBean;
+import interfaces.heweather.com.interfacesmodule.view.HeConfig;
+import interfaces.heweather.com.interfacesmodule.view.HeWeather;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REFRESH_LIST = 7;          //刷新ListView
 
     private static final String SB_SYS_DEBUG = "系统日志";
+
+    private static final String TAG_W = "weatherDebug";
 
     double T_data = 0;
     double H_data = 0;
@@ -106,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private List<TaskClass> tasks = new ArrayList<>();
 
-
+    final String[] cityID = {""};
+    String ctp1 = "眉山";
+    String ctp2 = "东坡";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +139,30 @@ public class MainActivity extends AppCompatActivity {
         //初始化图表
         CreateChart(1);
         upDateChart(true,2000);
+
+        HeConfig.init("HE2007212309031311", "425e60ea09a04667a8e2ae246d3e2437");
+        HeConfig.switchToDevService();
+
+        HeWeather.getGeoCityLookup(MainActivity.this,ctp1, new HeWeather.OnResultGeoListener() {
+            @Override
+            public void onError(Throwable throwable) {
+                Log.i(TAG_W, "getGeo onError: "+throwable);
+            }
+
+            @Override
+            public void onSuccess(GeoBean geoBean) {
+                Log.i(TAG_W, "getStatus: "+geoBean.getStatus());
+
+                for(GeoBean.LocationBean locationBean : geoBean.getLocationBean()){
+                    Log.i(TAG_W, "LocationBean: "+locationBean.getId());
+                    Log.i(TAG_W, "LocationBean: "+locationBean.getName());
+                    Log.i(TAG_W, "------------------------------");
+                    if(locationBean.getName().equals(ctp2)){
+                        cityID[0] = locationBean.getId();
+                    }
+                }
+            }
+        });
 
         //初始化任务ListView
         listView = findViewById(R.id.task_list);
@@ -222,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         PUSH_Message_To_UIHandler(UP_DATA_UI_ALL);
         SearchTask();
     }
+
 
     /**
      *
@@ -334,6 +373,30 @@ public class MainActivity extends AppCompatActivity {
             }break;
             case R.id.l_show_weather:{
 
+                HeWeather.getWeatherNow(MainActivity.this, "CN"+cityID[0], Lang.ZH_HANS, Unit.METRIC, new HeWeather.OnResultWeatherNowListener() {
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG_W, "getWeather onError: " + e);
+                    }
+
+                    @Override
+                    public void onSuccess(WeatherNowBean weatherBean) {
+                        Log.i(TAG_W, "getWeather onSuccess: " + new Gson().toJson(weatherBean));
+                        //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
+                        if (Code.OK.getCode().equalsIgnoreCase(weatherBean.getCode())) {
+                            WeatherNowBean.NowBaseBean now = weatherBean.getNow();
+                            System.out.println(now.getText());
+                            Glide.with(MainActivity.this)
+                                    .load("http://192.168.1.105:8082/icon/"+now.getIcon()+".png")
+                                    .into(showWeather);
+                        } else {
+                            //在此查看返回数据失败的原因
+                            String status = weatherBean.getCode();
+                            Code code = Code.toEnum(status);
+                            Log.i(TAG_W, "failed code: " + code);
+                        }
+                    }
+                });
             }
         }
     }
@@ -468,8 +531,9 @@ public class MainActivity extends AppCompatActivity {
                 addStringBuilder("来自远端mqtt",str+"\n");
                 Log.e("mydebug", "handleMessage: "+str);
                 JSONObject jsonObject = JSONObject.parseObject(str);
-                T_data = jsonObject.getFloat("temp").floatValue();
-                H_data = jsonObject.getFloat("humi").floatValue();
+
+                T_data = jsonObject.getDouble("temp");
+                H_data = jsonObject.getDouble("humi");
 
                 showTemperature.setText(T_data+"");
                 showHumidity.setText(H_data+"");
