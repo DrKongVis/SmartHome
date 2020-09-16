@@ -2,6 +2,7 @@ package com.example.smart_home_terminal.MQTT;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -10,6 +11,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
+ *
  * 发布消息的回调类
  *
  * 必须实现MqttCallback的接口并实现对应的相关接口方法CallBack 类将实现 MqttCallBack。
@@ -26,6 +28,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
  *  由 MqttClient.connect 激活此回调。
  *
  */
+
 public class MQTTReceiveCallback implements MqttCallback {
 
     private Handler DataHandler;
@@ -49,7 +52,7 @@ public class MQTTReceiveCallback implements MqttCallback {
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {
-        System.out.println("deliveryComplete---------" + token.isComplete());
+        System.out.println("deliveryComplete---------" + token.toString());
     }
 
     public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -60,6 +63,10 @@ public class MQTTReceiveCallback implements MqttCallback {
         System.out.println("接收消息内容 : " + data);
 
         if(topic.equals("back")){
+            if(data.charAt(0) == '['){
+                Log.e("debug", data);
+                return;
+            }
             Message msg = new Message();
             msg.what = 10;
             msg.obj = data;

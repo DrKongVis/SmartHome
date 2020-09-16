@@ -117,8 +117,8 @@
             android:onClick="Main_Click"
             >
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/w_null"
                 android:id="@+id/show_weather"
                 android:gravity="center"
@@ -138,15 +138,16 @@
             android:layout_height="100dp"
             android:background="@drawable/background_cycle1"
             android:gravity="center"
-            android:id="@+id/l_refresh"
+            android:id="@+id/l_connect"
             android:orientation="vertical"
             android:onClick="Main_Click"
             >
             <ImageView
-                android:id="@+id/power"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ico_refresh"
+                android:id="@+id/connect"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ico_disconnect"
+                android:onClick="Main_Click"
                 />
             <TextView
                 android:textSize="10dp"

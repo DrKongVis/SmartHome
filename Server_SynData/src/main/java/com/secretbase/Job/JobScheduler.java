@@ -25,6 +25,5 @@ public class JobScheduler {
         System.out.println("--------scheduler start ! ------------");
         scheduler.start();
         System.out.println("--------scheduler shutdown ! ------------");
-
     }
 }

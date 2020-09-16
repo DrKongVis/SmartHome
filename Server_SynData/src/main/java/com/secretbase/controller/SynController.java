@@ -18,7 +18,7 @@ public class SynController {
     public String main() throws SchedulerException {
         //初始化数据库连接
         JDBC_Util.Init_Jdbc();
-        MyMqttClient.start("SmartHomeServer:"+ new Random().nextInt());
+        MyMqttClient.start("SmartHomeServer_SynData:"+ new Random().nextInt());
         JobScheduler.start();
         return "Start Success";
     }

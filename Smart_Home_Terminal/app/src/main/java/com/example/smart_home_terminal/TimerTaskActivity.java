@@ -41,7 +41,7 @@ public class TimerTaskActivity extends AppCompatActivity {
 
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://182.92.150.158:3306/Smart_Home";
+    static final String DB_URL = "jdbc:mysql://192.168.31.146:3306/Smart_Home";
 
 
     // 数据库的用户名与密码，需要根据自己的设置
@@ -64,6 +64,7 @@ public class TimerTaskActivity extends AppCompatActivity {
                 try {
                     System.out.println("连接数据库...");
                     conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                    System.out.println("连接到数据库："+conn);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -143,7 +144,7 @@ public class TimerTaskActivity extends AppCompatActivity {
                         }else if(radioFan.isChecked()){
                             taskType = 0;
                         }else if(radioPower.isChecked()){
-                            taskType = 3;
+                            taskType = 2;
                         }else{
                             Toast.makeText(TimerTaskActivity.this,"请选择任务类型",Toast.LENGTH_SHORT).show();
                             return;

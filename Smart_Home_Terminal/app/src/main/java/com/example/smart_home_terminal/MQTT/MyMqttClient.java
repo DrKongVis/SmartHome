@@ -32,7 +32,7 @@ public class MyMqttClient  {
         if(null != clientId) {
             try {
                 //mqttClient = new MqttClient("tcp://182.92.150.158:1883", clientId,memoryPersistence);
-                mqttClient = new MqttClient("tcp://192.168.1.105:1883", clientId,memoryPersistence);
+                mqttClient = new MqttClient("tcp://192.168.31.146:1883", clientId,memoryPersistence);
             } catch (MqttException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -60,7 +60,7 @@ public class MyMqttClient  {
             System.out.println("mqttClient为空");
         }
         subTopic("iot");
-
+        subTopic("back");
 
         return mqttClient.isConnected();
     }

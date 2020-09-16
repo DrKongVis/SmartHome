@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int UP_DATA_UI_ALL = 6;        //更新所有UI
     private static final int REFRESH_LIST = 7;          //刷新ListView
 
+    private static final int BNT_CN_UP = 8;             //更新湿度按钮UI
+
     private static final String SB_SYS_DEBUG = "系统日志";
 
     private static final String TAG_W = "weatherDebug";
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView showTemperature;
     private TextView showHumidity;
     private ImageView showWeather;
-    private ImageView power;
+    private ImageView connect;
     private Button choiceTemperature;
     private Button choiceHumidity;
     private AAChartView AAChartViewTH;
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     // MySQL 8.0 以上版本 - JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     //static final String DB_URL = "jdbc:mysql://182.92.150.158:3306/Smart_Home";
-    static final String DB_URL = "jdbc:mysql://192.168.1.105:3306/Smart_Home";
+    static final String DB_URL = "jdbc:mysql://192.168.31.146:3306/Smart_Home";
 
     // 数据库的用户名与密码，需要根据自己的设置
     static final String USER = "root";
@@ -119,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private List<TaskClass> tasks = new ArrayList<>();
 
     final String[] cityID = {""};
-    String ctp1 = "眉山";
-    String ctp2 = "东坡";
+    String ctp1 = "广元";
+    String ctp2 = "利州";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,8 +370,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,TimerTaskActivity.class);
                 startActivityForResult(intent,1);
             }break;
-            case R.id.l_refresh:{
-                UPDateUI();
+            case R.id.connect:{
+                Message message = new Message();
+                message.what = BNT_CN_UP;
+                handler_UI_UpData.sendMessage(message);
+                //UPDateUI();
             }break;
             case R.id.l_show_weather:{
 
@@ -387,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
                             WeatherNowBean.NowBaseBean now = weatherBean.getNow();
                             System.out.println(now.getText());
                             Glide.with(MainActivity.this)
-                                    .load("http://192.168.1.105:8082/icon/"+now.getIcon()+".png")
+                                    .load("http://192.168.31.146:8082/icon/"+now.getIcon()+".png")
                                     .into(showWeather);
                         } else {
                             //在此查看返回数据失败的原因
@@ -493,7 +498,8 @@ public class MainActivity extends AppCompatActivity {
 
                             try {
                                 //String serverName = "192.168.31.145";
-                                String serverName = "182.92.150.158";
+                                //String serverName = "192.168.31.146";
+                                String serverName = "192.168.31.146";
                                 int port = 1234;
                                 System.out.println("连接到主机：" + serverName + " ，端口号：" + port);
                                 Socket client = new Socket(serverName, port);
@@ -509,7 +515,6 @@ public class MainActivity extends AppCompatActivity {
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
-
                         }
                     }).start();
                 }
@@ -559,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
         showTemperature = (TextView)findViewById( R.id.show_temperature );
         showHumidity = (TextView)findViewById( R.id.show_humidity );
         showWeather = (ImageView)findViewById( R.id.show_weather );
-        power = (ImageView)findViewById( R.id.power );
+        connect = (ImageView)findViewById( R.id.connect );
         choiceTemperature = (Button)findViewById( R.id.choice_temperature );
         choiceHumidity = (Button)findViewById( R.id.choice_humidity );
         AAChartViewTH = (AAChartView)findViewById( R.id.AAChartView_TH );
@@ -575,11 +580,10 @@ public class MainActivity extends AppCompatActivity {
         layout_light.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                light_is_auto = !light_is_auto;
                 if(light_is_auto){
-                    client.publishMessage("cmd","fin_auto",1);
+                    client.publishMessage("cmd","light_auto_no",1);
                 }else{
-                    client.publishMessage("cmd","fin_auto_no",1);
+                    client.publishMessage("cmd","light_auto",1);
                     client.publishMessage("cmd","Light_Off",1);
                 }
                 return true;
@@ -589,9 +593,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 if(fin_is_auto) {
-                    client.publishMessage("cmd","light_auto",1);
+                    client.publishMessage("cmd","fan_auto_no",1);
                 }else{
-                    client.publishMessage("cmd","light_auto_no",1);
+                    client.publishMessage("cmd","fan_auto",1);
                     client.publishMessage("cmd","Light_Off",1);
                 }
                 return true;
@@ -624,10 +628,13 @@ public class MainActivity extends AppCompatActivity {
                 }break;
                 case IMG_LIGHT_UP:{
                     if(!light_is_auto){
+                        System.out.println("1245789::"+light_isWork);
                         if(light_isWork){
-                            client.publishMessage("cmd","Light_On",1);
-                        }else{
+                            System.out.println("执行关灯");
                             client.publishMessage("cmd","Light_Off",1);
+                        }else{
+                            System.out.println("执行开灯");
+                            client.publishMessage("cmd","Light_On",1);
                         }
                     }else{
                         Toast.makeText(MainActivity.this,"请先长按脱离自动模式",Toast.LENGTH_SHORT).show();
@@ -636,9 +643,11 @@ public class MainActivity extends AppCompatActivity {
                 case IMG_FAN_UP:{
                     if(!fin_is_auto){
                         if(fan_isWork){
-                            client.publishMessage("cmd","Fan_On",1);
-                        }else{
+                            System.out.println("执行关风扇");
                             client.publishMessage("cmd","Fan_Off",1);
+                        }else{
+                            System.out.println("执行开风扇");
+                            client.publishMessage("cmd","Fan_On",1);
                         }
                     }else{
                         Toast.makeText(MainActivity.this,"请先长按脱离自动模式",Toast.LENGTH_SHORT).show();
@@ -665,7 +674,10 @@ public class MainActivity extends AppCompatActivity {
                 case REFRESH_LIST:{
                     TaskAdapter adapter = new TaskAdapter(tasks,MainActivity.this);
                     listView.setAdapter(adapter);
-                }
+                }break;
+                case BNT_CN_UP:{
+                    client.publishMessage("cmd","connected",1);
+                }break;
             }
         }
     };
@@ -678,6 +690,10 @@ public class MainActivity extends AppCompatActivity {
                 case 10:{
                     String info = (String) msg.obj;
                     System.out.println("back:"+info);
+                    if(info.equals("connected")){
+                        connect.setImageResource(R.drawable.ico_connected);
+                        break;
+                    }
                     JSONObject jsonObject = JSONObject.parseObject(info);
                     int fan = jsonObject.getInteger("fan").intValue();
                     int light = jsonObject.getInteger("light").intValue();
@@ -686,14 +702,13 @@ public class MainActivity extends AppCompatActivity {
                     int Mode_Light = jsonObject.getInteger("Mode_Light").intValue();
                     if(fan == 1){
                         //关
-                        bntFan.setImageResource(R.drawable.ct_fan0);
+                        bntFan.setImageResource(R.drawable.ct_fan1);
                         fan_isWork = false;
                     }else{
                         //开
-                        bntFan.setImageResource(R.drawable.ct_fan1);
+                        bntFan.setImageResource(R.drawable.ct_fan0);
                         fan_isWork = true;
                     }
-
                     if(light == 0){
                         //关
                         bntLight.setImageResource(R.drawable.ct_light0);
@@ -704,11 +719,11 @@ public class MainActivity extends AppCompatActivity {
                         light_isWork = true;
                     }
 
-                    if(curtain == 0){
+                    if(curtain == 1){
                         //关
                         door_isWork = false;
                         bntDoor.setImageResource(R.drawable.ct_door2);
-                    }else{
+                    }else if(curtain == 2){
                         //开
                         door_isWork = true;
                         bntDoor.setImageResource(R.drawable.ct_door1);
@@ -720,8 +735,8 @@ public class MainActivity extends AppCompatActivity {
                         fin_is_auto = true;
                     }else{
                         //手动
-                        bntFan.setImageResource(R.drawable.ct_fan0);
-                        fan_isWork = false;
+//                        bntFan.setImageResource(R.drawable.ct_fan0);
+//                        fan_isWork = false;
                         fin_is_auto = false;
                     }
 
@@ -731,8 +746,8 @@ public class MainActivity extends AppCompatActivity {
                         light_is_auto = true;
                     }else{
                         //手动
-                        bntLight.setImageResource(R.drawable.ct_light0);
-                        light_isWork = false;
+//                        bntLight.setImageResource(R.drawable.ct_light0);
+//                        light_isWork = false;
                         light_is_auto = false;
                     }
                 }

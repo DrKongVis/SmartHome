@@ -75,7 +75,7 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="电源"
+                android:text="窗帘"
                 android:id="@+id/radio_power"
                 />
         </RadioGroup>
